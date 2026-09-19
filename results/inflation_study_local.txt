@@ -1,0 +1,18 @@
+Inflation study (local config): Ne=20 (deliberately undersampled for K=40), stride=1, obs_std=1.0, 5 seeds
+
+-- inflation alone (no localization) --
+  lambda    analysis RMSE (mean+-std)     spread (mean+-std)
+    1.00       4.1616+-0.3127          0.1806+-0.0073   
+    1.05       4.0015+-0.1153          0.2046+-0.0054   
+    1.10       3.6721+-0.2569          0.2159+-0.0044   
+    1.20       2.3032+-0.9932          0.2435+-0.0051   
+    1.50       0.8507+-0.5980          0.3057+-0.0031   
+
+-- radius selection: [(2.0, 0.3759), (4.0, 0.3334), (6.0, 0.6071), (10.0, 0.9753)] -> best_radius=4.0
+-- inflation combined with localization (radius=4.0) --
+  lambda    analysis RMSE (mean+-std)     spread (mean+-std)
+    1.00       0.3334+-0.0242          0.2786+-0.0014   
+    1.05       0.3177+-0.0096          0.3064+-0.0022   
+    1.10       0.3220+-0.0077          0.3319+-0.0026   
+    1.20       0.3446+-0.0069          0.3777+-0.0026   
+    1.50       0.4208+-0.0077          0.4805+-0.0023   

@@ -1,0 +1,6 @@
+Observation-noise study (smoke config): Ne=20, stride=1, 2 seeds, 20 cycles
+
+ obs_std    analysis RMSE (mean+-std)     spread (mean+-std)
+    0.50       0.5370+-0.1805          0.1078+-0.0010   
+    1.00       0.5867+-0.1474          0.2151+-0.0001   
+    2.00       0.7506+-0.1994          0.4451+-0.0032   

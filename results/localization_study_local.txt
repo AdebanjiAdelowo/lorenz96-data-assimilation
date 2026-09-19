@@ -1,0 +1,8 @@
+Localization study (local config): Ne=20 (deliberately undersampled for K=40), stride=1, obs_std=1.0, 5 seeds
+
+    radius    analysis RMSE (mean+-std)     spread (mean+-std)  diverged frac
+      none       4.1616+-0.3127          0.1806+-0.0073              0.00
+       2.0       0.3759+-0.0143          0.3398+-0.0018              0.00
+       4.0       0.3334+-0.0242          0.2786+-0.0014              0.00
+       6.0       0.6071+-0.5873          0.2507+-0.0017              0.00
+      10.0       0.9753+-0.8423          0.2236+-0.0034              0.00

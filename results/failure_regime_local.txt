@@ -1,0 +1,7 @@
+Failure-regime demonstration (local config): very small ensembles, WITH localization (radius=4.0) -- even localization cannot fully compensate for too few members
+
+   Ne  diverged   time-avg analysis RMSE  final spread
+    4     False                   3.7328        0.1975
+    6     False                   1.7455        0.2309
+    8     False                   1.7346        0.2971
+   10     False                   0.3928        0.2638

@@ -1,6 +1,8 @@
 import numpy as np
 
-from src.l96 import l96_rhs, rk4_step, L96Params, integrate, spin_up
+from src.l96 import (
+    l96_rhs, rk4_step, L96Params, integrate, spin_up, l96_rhs_ensemble, integrate_ensemble,
+)
 
 
 def test_cyclic_indexing_matches_hand_expansion_for_small_K():
@@ -116,6 +118,24 @@ def test_spin_up_reaches_bounded_attractor_state():
     x_spun = spin_up(x0, params, t_spinup=20.0)
     assert np.all(np.isfinite(x_spun))
     assert np.max(np.abs(x_spun)) < 50.0
+
+
+def test_vectorised_ensemble_integration_matches_per_member_integration():
+    K = 40
+    F = 8.0
+    Ne = 7
+    rng = np.random.default_rng(5)
+    X0 = F + rng.standard_normal((K, Ne))
+    params = L96Params(K=K, F=F, dt=0.01)
+
+    X_final_vectorised = integrate_ensemble(X0, params, n_steps=50)
+
+    X_final_loop = np.empty_like(X0)
+    for i in range(Ne):
+        _, xi = integrate(X0[:, i], params, n_steps=50, save_every=50)
+        X_final_loop[:, i] = xi[-1]
+
+    assert np.allclose(X_final_vectorised, X_final_loop, atol=1e-10)
 
 
 def test_output_shapes_and_save_every():

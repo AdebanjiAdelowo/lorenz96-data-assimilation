@@ -1,0 +1,6 @@
+Chaos diagnostics (local config): K=40, F=8.0
+Largest Lyapunov exponent estimate (Benettin algorithm): lambda_1 = 1.6471
+  tau (renormalization interval) = 0.1, t_total = 20.0, delta0_norm = 1e-07
+  running estimate at t=10.10 (halfway): 1.6531
+  running estimate at t=20.00 (final): 1.6471
+  e-folding (Lyapunov) time 1/lambda_1 = 0.6071 model time units

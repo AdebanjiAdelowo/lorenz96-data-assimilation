@@ -1,0 +1,6 @@
+Free-forecast baseline (local config): K=40, F=8.0, initial perturbation std=1.0
+RMSE(0) = 0.7894
+RMSE at t=1.50 (25%): 4.0776
+RMSE at t=3.00 (50%): 4.6590
+RMSE at t=6.00 (end): 3.7858
+(saturates near the climatological RMS separation of two independent attractor states, not a numerical artefact -- errors cannot exceed the attractor's own scale)

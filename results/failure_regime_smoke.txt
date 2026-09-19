@@ -1,0 +1,6 @@
+Failure-regime demonstration (smoke config): very small ensembles, WITH localization (radius=4.0) -- even localization cannot fully compensate for too few members
+
+   Ne  diverged   time-avg analysis RMSE  final spread
+    2     False                   2.7067        0.1099
+    3     False                   1.3450        0.1334
+    5     False                   0.5540        0.2936

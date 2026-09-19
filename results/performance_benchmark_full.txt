@@ -1,0 +1,15 @@
+Platform: macOS-26.6.2-arm64-arm-64bit
+CPU: Apple M3 Pro
+Python: 3.12.2
+NumPy: 2.0.0
+Precision: float64, CPU only, single-threaded
+
+K=40, 100 cycles/run, 2 warm-up run(s) discarded, 5 timed repeats
+
+    Ne   median s/cycle        min        max   total s (median run)
+    10          0.00305    0.00303    0.00306                  0.305
+    20          0.00317    0.00313    0.00318                  0.317
+    40          0.00340    0.00338    0.00341                  0.340
+    80          0.00384    0.00381    0.00385                  0.384
+   160          0.00464    0.00462    0.00467                  0.464
+   320          0.00618    0.00613    0.00626                  0.618

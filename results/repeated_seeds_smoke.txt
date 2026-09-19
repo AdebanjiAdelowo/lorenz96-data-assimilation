@@ -1,0 +1,12 @@
+Repeated-seed statistics (smoke config): 3 independent seeds, Ne=10, stride=1, obs_std=1.0
+
+unlocalized: analysis RMSE = 1.0479 +/- 0.2560 (per-seed: [1.18, 1.274, 0.69])
+localized (radius=4.0): analysis RMSE = 0.3946 +/- 0.0051 (per-seed: [0.389, 0.394, 0.401])
+
+unlocalized: spread = 0.1616 +/- 0.0049
+localized: spread = 0.2983 +/- 0.0111
+
+Rank histogram (localized filter, 3 seeds, 1920 truth/forecast-ensemble comparisons, 11 possible ranks):
+  counts: [263, 160, 148, 123, 110, 129, 131, 144, 159, 224, 329]
+  expected count per bin if flat: 174.5
+  (a diagnostic, not proof of calibration -- see README 'Ensemble spread')

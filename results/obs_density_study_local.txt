@@ -1,0 +1,7 @@
+Observation-density study (local config): Ne=40, obs_std=1.0, 5 seeds, 150 cycles
+
+ stride   m/K observed    analysis RMSE (mean+-std)     spread (mean+-std)
+      1          40/40       2.2102+-0.7231          0.2003+-0.0051   
+      2          20/40       2.6626+-0.5883          0.3104+-0.0099   
+      4          10/40       3.6458+-0.3608          0.5528+-0.0139   
+      8           5/40       3.9288+-0.4588          1.8563+-0.1912   

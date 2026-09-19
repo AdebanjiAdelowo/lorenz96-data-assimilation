@@ -1,0 +1,36 @@
+# Final portfolio-scale configuration: more cycles and more seeds for statistically credible
+# conclusions (per the project brief, prioritised over micro-optimising code -- L96 is cheap).
+base: {K: 40, F: 8.0, dt: 0.01, t_spinup: 30.0}
+
+lyapunov: {t_total: 40.0, tau: 0.1, delta0_norm: 1.0e-7, seed: 0}
+
+free_forecast: {t_end: 8.0, seed: 0, ens_init_std: 1.0}
+
+baseline: {Ne: 20, stride: 1, obs_std: 1.0, obs_interval_steps: 10, n_cycles: 400,
+           ens_init_std: 1.0, seed: 0}
+
+ensemble_size_study: {Ne_values: [10, 20, 40, 80], stride: 1, obs_std: 1.0, obs_interval_steps: 10,
+                       n_cycles: 400, ens_init_std: 1.0, n_seeds: 10}
+
+obs_density_study: {strides: [1, 2, 4, 8], Ne: 40, obs_std: 1.0, obs_interval_steps: 10, n_cycles: 400,
+                     ens_init_std: 1.0, n_seeds: 10}
+
+obs_frequency_study: {intervals: [5, 10, 20, 40], Ne: 40, stride: 1, obs_std: 1.0, n_cycles: 400,
+                       ens_init_std: 1.0, n_seeds: 10}
+
+obs_noise_study: {stds: [0.25, 0.5, 1.0, 2.0, 4.0], Ne: 40, stride: 1, obs_interval_steps: 10,
+                   n_cycles: 400, ens_init_std: 1.0, n_seeds: 10}
+
+localization_study: {radii: [2.0, 4.0, 6.0, 10.0], Ne: 20, stride: 1, obs_std: 1.0,
+                      obs_interval_steps: 10, n_cycles: 400, ens_init_std: 1.0, n_seeds: 10}
+
+inflation_study: {factors: [1.0, 1.05, 1.1, 1.2, 1.5], Ne: 20, stride: 1, obs_std: 1.0,
+                   obs_interval_steps: 10, n_cycles: 400, ens_init_std: 1.0, n_seeds: 10}
+
+failure_regime: {Ne_values: [4, 6, 8, 10], stride: 1, obs_std: 1.0, obs_interval_steps: 10,
+                  n_cycles: 400, ens_init_std: 1.0, n_seeds: 10, loc_radius: 4.0}
+
+repeated_seeds: {Ne: 20, stride: 1, obs_std: 1.0, obs_interval_steps: 10, n_cycles: 400,
+                  ens_init_std: 1.0, n_seeds: 20, loc_radius: 4.0}
+
+performance: {Ne_values: [10, 20, 40, 80, 160, 320], n_cycles: 100, n_repeats: 5, n_warmup: 2}

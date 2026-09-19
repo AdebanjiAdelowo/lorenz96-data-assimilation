@@ -1,0 +1,7 @@
+Observation-density study (full config): Ne=40, obs_std=1.0, 10 seeds, 400 cycles
+
+ stride   m/K observed    analysis RMSE (mean+-std)     spread (mean+-std)
+      1          40/40       4.2655+-0.1265          0.2181+-0.0065   
+      2          20/40       4.5128+-0.2181          0.3550+-0.0070   
+      4          10/40       4.6739+-0.2828          0.6254+-0.0274   
+      8           5/40       4.0505+-0.1287          1.9587+-0.0707   

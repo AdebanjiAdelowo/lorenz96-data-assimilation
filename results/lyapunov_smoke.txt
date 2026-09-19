@@ -1,0 +1,6 @@
+Chaos diagnostics (smoke config): K=40, F=8.0
+Largest Lyapunov exponent estimate (Benettin algorithm): lambda_1 = 1.7121
+  tau (renormalization interval) = 0.1, t_total = 5.0, delta0_norm = 1e-07
+  running estimate at t=2.60 (halfway): 2.2388
+  running estimate at t=5.00 (final): 1.7121
+  e-folding (Lyapunov) time 1/lambda_1 = 0.5841 model time units

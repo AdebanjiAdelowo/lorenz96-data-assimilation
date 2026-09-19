@@ -1,0 +1,7 @@
+Localization study (smoke config): Ne=10 (deliberately undersampled for K=40), stride=1, obs_std=1.0, 2 seeds
+
+    radius    analysis RMSE (mean+-std)     spread (mean+-std)  diverged frac
+      none       1.2269+-0.0467          0.1584+-0.0025              0.00
+       2.0       0.4005+-0.0348          0.3577+-0.0107              0.00
+       4.0       0.3913+-0.0026          0.2920+-0.0080              0.00
+       8.0       0.5455+-0.0492          0.2484+-0.0059              0.00

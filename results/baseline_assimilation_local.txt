@@ -1,0 +1,7 @@
+Baseline EnKF assimilation (local config): K=40, F=8.0, Ne=20, obs stride=1 (m=40/40 observed), obs_std=1.0, obs interval=0.100 time units, 150 cycles, seed=0
+diverged: False
+time-averaged (post-transient) analysis RMSE: 3.9193
+time-averaged (post-transient) forecast RMSE: 4.0151
+final free-forecast RMSE (no assimilation, same run length): 4.8882
+time-averaged analysis spread: 0.1883
+analysis RMSE / spread ratio (post-transient): 20.81 (1.0 would indicate a well-calibrated ensemble in this crude sense; much greater than 1 indicates under-dispersion -- see README 'Ensemble spread')

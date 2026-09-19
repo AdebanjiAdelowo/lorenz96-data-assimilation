@@ -1,0 +1,7 @@
+Ensemble-size study (full config): 10 seeds, stride=1, obs_std=1.0, 400 cycles
+
+   Ne    analysis RMSE (mean+-std)    forecast RMSE (mean+-std)     spread (mean+-std)  runtime(s)  diverged frac
+   10       4.7784+-0.1146             4.8281+-0.1144          0.1451+-0.0030          0.780           0.00
+   20       4.6321+-0.1295             4.7168+-0.1265          0.1837+-0.0043          0.860           0.00
+   40       4.2655+-0.1265             4.3907+-0.1278          0.2181+-0.0065          0.989           0.00
+   80       2.8309+-1.3469             2.9568+-1.3838          0.2338+-0.0049          1.128           0.00

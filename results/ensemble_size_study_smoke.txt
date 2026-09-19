@@ -1,0 +1,6 @@
+Ensemble-size study (smoke config): 2 seeds, stride=1, obs_std=1.0, 20 cycles
+
+   Ne    analysis RMSE (mean+-std)    forecast RMSE (mean+-std)     spread (mean+-std)  runtime(s)  diverged frac
+    5       1.7079+-0.2555             1.7544+-0.2530          0.1104+-0.0084          0.065           0.00
+   10       1.2269+-0.0467             1.2958+-0.0516          0.1584+-0.0025          0.055           0.00
+   20       0.5867+-0.1474             0.6697+-0.1687          0.2151+-0.0001          0.057           0.00

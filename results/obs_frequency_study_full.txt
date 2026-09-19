@@ -1,0 +1,7 @@
+Observation-frequency study (full config): Ne=40, stride=1, obs_std=1.0, 10 seeds
+
+ interval steps  interval (time)    analysis RMSE (mean+-std)     spread (mean+-std)
+              5            0.050       3.8404+-0.3943          0.1524+-0.0047   
+             10            0.100       3.5633+-0.4336          0.2169+-0.0046   
+             20            0.200       3.2371+-0.4928          0.2989+-0.0090   
+             40            0.400       2.9079+-0.3656          0.4285+-0.0065   

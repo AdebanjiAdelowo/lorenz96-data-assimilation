@@ -55,6 +55,35 @@ def rk4_step(x: np.ndarray, F: float, dt: float) -> np.ndarray:
     return x + (dt / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
 
 
+def l96_rhs_ensemble(X: np.ndarray, F: float) -> np.ndarray:
+    """Vectorised dX/dt for an ensemble X of shape (K, Ne): identical dynamics applied independently
+    to every column/member at once (np.roll along axis=0, the state axis). Mathematically identical
+    to calling `l96_rhs` once per column; verified directly in tests/test_l96.py against exactly
+    that. Used by `integrate_ensemble` so the forecast step of an EnKF cycle is a single vectorised
+    RK4 step across the whole ensemble rather than a Python loop over members."""
+    x_p1 = np.roll(X, -1, axis=0)
+    x_m2 = np.roll(X, 2, axis=0)
+    x_m1 = np.roll(X, 1, axis=0)
+    return (x_p1 - x_m2) * x_m1 - X + F
+
+
+def rk4_step_ensemble(X: np.ndarray, F: float, dt: float) -> np.ndarray:
+    k1 = l96_rhs_ensemble(X, F)
+    k2 = l96_rhs_ensemble(X + 0.5 * dt * k1, F)
+    k3 = l96_rhs_ensemble(X + 0.5 * dt * k2, F)
+    k4 = l96_rhs_ensemble(X + dt * k3, F)
+    return X + (dt / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
+
+
+def integrate_ensemble(X0: np.ndarray, params: "L96Params", n_steps: int) -> np.ndarray:
+    """Integrate an ensemble (K, Ne) forward n_steps, returning only the final state (K, Ne) -- the
+    only thing an EnKF forecast step needs (see src/experiment.py)."""
+    X = X0.copy()
+    for _ in range(n_steps):
+        X = rk4_step_ensemble(X, params.F, params.dt)
+    return X
+
+
 @dataclass
 class L96Params:
     K: int = 40
