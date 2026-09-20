@@ -64,7 +64,8 @@ regime) and stabilises rather than drifting over the second half of a long integ
 units: a small initial error grows by a factor of $e$ roughly every 0.59 time units under free
 integration -- this is the precise mathematical reason sequential assimilation, re-anchoring the
 forecast to new data periodically, is needed at all (see "Free-forecast baseline" below for the
-resulting error growth in RMSE terms).
+resulting error growth in RMSE terms). Perturbation growth and the running Lyapunov-exponent estimate
+are plotted in `figures/lyapunov_full.png`.
 
 ## Observation model
 
@@ -128,7 +129,8 @@ A perturbed state (truth $+$ Gaussian noise, std 1.0) integrated FREELY, no obse
 incorporated (`scripts/free_forecast_baseline.py`, `full` config): RMSE grows from $0.79$ at $t=0$ to
 $3.86$ at $t=2$ to $5.22$-$5.26$ by $t=4$-$8$, saturating near the climatological RMS separation of two
 independent attractor states (not a numerical artefact -- errors cannot exceed the attractor's own
-scale). This is the baseline every assimilation result below must be judged against.
+scale). This is the baseline every assimilation result below must be judged against
+(`figures/free_forecast_full.png`).
 
 ## Baseline assimilation
 
@@ -145,7 +147,11 @@ std $=1$, observation interval $0.1$ time units, 400 cycles (`scripts/run_baseli
 "reasonable-looking" ensemble size for a 40-dimensional system, without localization or inflation,
 suffers textbook EnKF filter divergence (ensemble spread collapses while RMSE grows), demonstrating
 directly the finite-ensemble sampling problem that localization and inflation exist to address --
-motivated empirically here, not asserted (see "Localization" / "Inflation" below).
+motivated empirically here, not asserted (see "Localization" / "Inflation" below). Truth, observations,
+and the EnKF analysis mean for representative state components are plotted in
+`figures/baseline_components_full.png`; RMSE vs. time (analysis vs. free forecast) in
+`figures/baseline_rmse_vs_time_full.png`; and spread vs. RMSE in
+`figures/baseline_spread_vs_rmse_full.png`.
 
 ## Ensemble-size study
 
@@ -163,7 +169,7 @@ A clear improving trend, but even $N_e=80$ (double the state dimension) does not
 problem without localization -- and its large standard deviation ($\pm1.35$) shows some seeds still
 struggle. Larger ensembles alone are not assumed to fix every issue (confirmed, not assumed): see
 "Localization" for the much larger improvement a modest ensemble gets from covariance localization
-instead.
+instead (`figures/ensemble_size_study_full.png`).
 
 ## Observation-density study
 
@@ -182,7 +188,8 @@ Density degrades performance from stride 1 to 4, as expected, with spread growin
 lost information (partially inferring unobserved components through the ensemble's dynamical
 covariance). The stride-8 result is NOT monotonic with the trend (RMSE lower than stride 4, despite
 observing only half as much) -- reported exactly as measured; this was not further diagnosed and is
-listed as an open question in "Limitations" rather than smoothed over.
+listed as an open question in "Limitations" rather than smoothed over
+(`figures/obs_density_study_full.png`).
 
 ## Observation-frequency study
 
@@ -204,7 +211,8 @@ analysis step, partially self-correcting the calibration rather than the physica
 "working better." This is reported as measured, with this caveat, rather than as a straightforward
 "less frequent observation helps" claim -- the relationship between frequency and quality is
 confounded with calibration at this ensemble size, and a cleanly monotonic degradation would only be
-expected for an already well-calibrated filter (e.g. localized).
+expected for an already well-calibrated filter (e.g. localized)
+(`figures/obs_frequency_study_full.png`).
 
 ## Noise sensitivity
 
@@ -222,7 +230,8 @@ Vary observation noise std at $N_e=40$, stride 1, interval $0.1$, 10 seeds
 Lower observation noise does NOT automatically fix finite-ensemble covariance problems (checked
 directly, not assumed): RMSE barely changes (and is not even monotonic) across a 16x range of
 observation-noise variance at this $N_e$ -- the filter is limited by ensemble sampling error and its
-own under-dispersion at this operating point, not by observation quality.
+own under-dispersion at this operating point, not by observation quality
+(`figures/obs_noise_study_full.png`).
 
 ## Ensemble spread
 
@@ -258,7 +267,7 @@ much worse), and the STANDARD DEVIATION across seeds also grows with radius -- w
 means occasional bad seeds re-emerge, not just a worse mean. The best radius differs slightly between
 configurations (radius 4 best at `local` scale, radius 2 best at `full` scale) -- a modest,
 seed-count-dependent effect reported honestly rather than papered over with a single "the" optimal
-value.
+value (`figures/localization_study_full.png`).
 
 ## Inflation
 
@@ -284,7 +293,8 @@ already-well-calibrated filter just adds unnecessary spread. The best-radius sel
 study is computed empirically from this study's own small radius grid (not copied from a different
 study or picked by an untested heuristic -- an earlier draft of this script picked the middle INDEX of
 the radius list rather than the empirically best radius, silently conflating "radius 6" with "the best
-radius"; caught and fixed before these results were produced).
+radius"; caught and fixed before these results were produced)
+(`figures/inflation_study_full.png`).
 
 ## Failure regimes
 
@@ -306,7 +316,8 @@ free-forecast scale) -- rather than literal numerical blow-up. This is reported 
 failure-regime finding because it is the MORE representative EnKF pathology in practice (a filter that
 has become overconfident and stopped correcting itself), not because a numerical-overflow threshold
 was ever triggered (`DIVERGENCE_RMSE_THRESHOLD=50` in `src/experiment.py` was never crossed in any
-experiment in this project).
+experiment in this project). RMSE and spread vs. time at every tested $N_e$ are plotted in
+`figures/failure_regime_full.png`.
 
 ## Repeated-seed statistics
 
@@ -343,7 +354,8 @@ Sub-linear-looking growth in the tested range (dominated by fixed per-cycle over
 ensemble sizes, not by the $O(N_e)$ or worse ensemble-covariance cost, which only becomes visible at
 much larger $N_e$). L96 is inexpensive by design (`full`-config total wall time across all 12 scripts:
 well under 10 minutes), which is exactly what makes the 10-20-seed repeated experiments in every study
-above affordable -- per the brief, prioritised over micro-optimising this already-fast code.
+above affordable -- per the brief, prioritised over micro-optimising this already-fast code
+(`figures/performance_scaling_full.png`).
 
 ## Limitations
 
