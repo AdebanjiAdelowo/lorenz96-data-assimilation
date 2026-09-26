@@ -13,9 +13,8 @@ Bayesian state estimation -> ensemble covariance -> Kalman analysis -> forecast/
 quantitative assimilation diagnostics**. Every stage is checked before being trusted for the next: the
 Lorenz-96 model and integrator are verified before any assimilation work begins, chaos is quantified
 (not merely observed) to establish *why* assimilation is needed at all, and the EnKF itself is
-validated against an exact reference before being trusted on the nonlinear problem. Throughout, the
-project follows the same standard used throughout this author's other computational-mathematics work:
-negative or inconvenient results (filter divergence at
+validated against an exact reference before being trusted on the nonlinear problem. Negative or
+inconvenient results (filter divergence at
 small ensemble size, the limits of localization, non-monotonic effects) are reported exactly as
 measured, not tuned away.
 
@@ -47,7 +46,7 @@ rather than in an arbitrary transient.
 
 ## Chaotic dynamics
 
-Quantified, not merely observed (brief section 3), via the classical Benettin et al. (1980)
+Quantified via the classical Benettin et al. (1980)
 renormalization algorithm for the largest Lyapunov exponent: integrate a reference and a perturbed
 trajectory, periodically rescale the perturbation back to a fixed small norm, accumulate the mean
 log-growth rate. Result (`scripts/estimate_lyapunov.py`, `full` config, $t_{\text{total}}=40$,
@@ -66,6 +65,11 @@ integration -- this is the precise mathematical reason sequential assimilation, 
 forecast to new data periodically, is needed at all (see "Free-forecast baseline" below for the
 resulting error growth in RMSE terms). Perturbation growth and the running Lyapunov-exponent estimate
 are plotted in `figures/lyapunov_full.png`.
+
+![Perturbation growth on a log scale and running largest-Lyapunov-exponent estimate settling near 1.69](figures/lyapunov_full.png)
+
+*Left: separation between a reference and a perturbed trajectory, growing exponentially from
+$10^{-6}$. Right: running Benettin estimate of $\lambda_1$ over $t\in[0,40]$, final value 1.691.*
 
 ## Observation model
 
@@ -88,6 +92,31 @@ analysis (update every member using the ensemble's own sample covariance) -> rep
 (`src/experiment.py:run_assimilation_experiment`, reused unchanged by every study script in this
 project).
 
+One assimilation cycle in this twin-experiment setup. The truth trajectory is used only to generate
+observations and to score the filter afterwards; it never enters the analysis step:
+
+```mermaid
+flowchart TD
+    subgraph TW["Twin experiment"]
+        T["Truth x_k<br/>L96 (K = 40, F = 8), RK4, dt = 0.01"]
+        O["Observation y = H x + ε, ε ~ N(0, R)<br/>every stride-th component"]
+        T --> O
+    end
+    subgraph EN["Stochastic EnKF (src/enkf.py)"]
+        F["Forecast ensemble X_f<br/>each member integrated to next obs time"]
+        I["Optional inflation<br/>anomalies × √λ"]
+        C["Sample covariances from anomalies<br/>P_f Hᵀ, H P_f Hᵀ"]
+        L["Optional Gaspari-Cohn localization<br/>Schur product on the cyclic ring"]
+        K["Kalman gain<br/>K = P_f Hᵀ (H P_f Hᵀ + R)⁻¹"]
+        A["Analysis, per member<br/>x_a = x_f + K (y + εᵢ − H x_f)"]
+        F --> I --> C --> L --> K --> A
+    end
+    O --> A
+    A -->|next cycle| F
+    A -.scored against truth.-> D["Diagnostics<br/>RMSE, spread, rank histogram"]
+    T -.-> D
+```
+
 ## Ensemble Kalman Filter
 
 **Stochastic EnKF with perturbed observations** (Evensen, 1994; the perturbed-observation correction
@@ -96,7 +125,7 @@ unbiased estimator of the true Kalman-filter posterior covariance in expectation
 deterministic square-root filter (ETKF/EnSRF) because (a) it is the original, most direct
 "derived-from-the-mathematics" formulation, and (b) its own Monte Carlo sampling noise is an explicit,
 seed-controlled quantity this project's repeated-seed studies are specifically designed to
-characterise (brief section 6) -- justified in full in `src/enkf.py`'s module docstring.
+characterise -- justified in full in `src/enkf.py`'s module docstring.
 
 Forecast ensemble $X_f\in\mathbb R^{K\times N_e}$, mean $\bar x_f$, anomalies
 $X_f' = X_f - \bar x_f\mathbf 1^T$. Working entirely in the anomaly representation (never forming the
@@ -152,6 +181,14 @@ and the EnKF analysis mean for representative state components are plotted in
 `figures/baseline_components_full.png`; RMSE vs. time (analysis vs. free forecast) in
 `figures/baseline_rmse_vs_time_full.png`; and spread vs. RMSE in
 `figures/baseline_spread_vs_rmse_full.png`.
+
+<p align="center">
+  <img src="figures/baseline_rmse_vs_time_full.png" width="560"
+       alt="EnKF analysis RMSE and free-forecast RMSE over time, both saturating at a similar level">
+</p>
+
+*Baseline filter ($N_e=20$, no localization or inflation, single seed): the analysis RMSE rises to
+nearly the free-forecast level, the filter-divergence behaviour described above.*
 
 ## Ensemble-size study
 
@@ -269,6 +306,14 @@ configurations (radius 4 best at `local` scale, radius 2 best at `full` scale) -
 seed-count-dependent effect reported honestly rather than papered over with a single "the" optimal
 value (`figures/localization_study_full.png`).
 
+<p align="center">
+  <img src="figures/localization_study_full.png" width="480"
+       alt="Bar chart of time-averaged analysis RMSE for no localization and radii 2, 4, 6 and 10">
+</p>
+
+*Time-averaged analysis RMSE (mean and standard deviation over 10 seeds, $N_e=20$) against
+Gaspari-Cohn localization radius.*
+
 ## Inflation
 
 Also applied only because under-dispersion was observed. A small a priori grid of multiplicative
@@ -298,7 +343,7 @@ radius"; caught and fixed before these results were produced)
 
 ## Failure regimes
 
-Actively searched for, per the brief (section 16): very small ensembles ($N_e\in\{4,6,8,10\}$), WITH
+Very small ensembles ($N_e\in\{4,6,8,10\}$), WITH
 localization already applied (radius 4), 400 cycles (`scripts/failure_regime_demo.py`, `full` config):
 
 | $N_e$ | analysis RMSE (time-avg.) | final spread |
@@ -354,7 +399,7 @@ Sub-linear-looking growth in the tested range (dominated by fixed per-cycle over
 ensemble sizes, not by the $O(N_e)$ or worse ensemble-covariance cost, which only becomes visible at
 much larger $N_e$). L96 is inexpensive by design (`full`-config total wall time across all 12 scripts:
 well under 10 minutes), which is exactly what makes the 10-20-seed repeated experiments in every study
-above affordable -- per the brief, prioritised over micro-optimising this already-fast code
+above affordable, which was prioritised over micro-optimising this already-fast code
 (`figures/performance_scaling_full.png`).
 
 ## Limitations
