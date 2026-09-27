@@ -314,6 +314,14 @@ value (`figures/localization_study_full.png`).
 *Time-averaged analysis RMSE (mean and standard deviation over 10 seeds, $N_e=20$) against
 Gaspari-Cohn localization radius.*
 
+![Truth, observations and EnKF analysis for x_0, and RMSE against spread, without and with localization](figures/baseline_vs_localized_full.png)
+
+*The baseline filter (top) and the same filter with radius-2 localization (bottom), on the same
+truth, observations and seed ($N_e=20$, no inflation, `full` config). Only localization differs.
+Time-averaged analysis RMSE drops from 4.47 to 0.42, and the spread (0.19 to 0.35) comes into line
+with the error instead of collapsing below it. Single-seed illustration from
+`scripts/compare_baseline_localized.py`; the 10-seed statistics are in the table above.*
+
 ## Inflation
 
 Also applied only because under-dispersion was observed. A small a priori grid of multiplicative
@@ -449,6 +457,7 @@ python scripts/observation_density_study.py --config full
 python scripts/observation_frequency_study.py --config full
 python scripts/observation_noise_study.py --config full
 python scripts/localization_study.py --config full
+python scripts/compare_baseline_localized.py --config full   # single-seed trajectory figure
 python scripts/inflation_study.py --config full
 python scripts/failure_regime_demo.py --config full
 python scripts/repeated_seeds_study.py --config full
@@ -474,7 +483,7 @@ lorenz96-data-assimilation/
 │   ├── localization.py      Gaspari-Cohn localization
 │   ├── kalman_reference.py  exact Kalman filter (linear-Gaussian validation reference)
 │   └── experiment.py         shared forecast-analysis cycling runner, used by every study script
-├── scripts/                 12 scripts, one per README section (see "Reproducibility")
+├── scripts/                 13 scripts: one per README section, plus one figure script (see "Reproducibility")
 ├── tests/                    40 pytest tests
 ├── configs/                  smoke.yaml, local.yaml, full.yaml
 ├── figures/                  generated PNGs
