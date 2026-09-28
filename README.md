@@ -1,7 +1,7 @@
 # Lorenz-96 Data Assimilation with an Ensemble Kalman Filter
 
 A classical sequential-Bayesian-state-estimation study on the chaotic Lorenz-96 system: a stochastic
-Ensemble Kalman Filter (EnKF) is derived from the mathematics, independently validated against the
+Ensemble Kalman Filter (EnKF) is derived from the mathematics, verified against the
 exact Kalman filter on a linear-Gaussian reference problem, then applied to a 40-dimensional chaotic
 system under partial, noisy, intermittent observations. No machine learning is used anywhere in this
 repository.
@@ -13,7 +13,7 @@ Bayesian state estimation -> ensemble covariance -> Kalman analysis -> forecast/
 quantitative assimilation diagnostics**. Every stage is checked before being trusted for the next: the
 Lorenz-96 model and integrator are verified before any assimilation work begins, chaos is quantified
 (not merely observed) to establish *why* assimilation is needed at all, and the EnKF itself is
-validated against an exact reference before being trusted on the nonlinear problem. Negative or
+verified against an exact reference before use on the nonlinear problem. Negative or
 inconvenient results (filter divergence at
 small ensemble size, the limits of localization, non-monotonic effects) are reported exactly as
 measured, not tuned away.
@@ -55,7 +55,7 @@ $\tau=0.1$):
 $$\lambda_1 \approx 1.69 \quad (\text{running estimate: } 1.61 \text{ at } t=20 \to 1.69 \text{ at } t=40),$$
 
 consistent with the commonly cited literature range for $K=40$, $F=8$ ($\lambda_1\approx1.6$-$1.7$
-across sources using slightly different conventions). Validated internally: the estimate is
+across sources using slightly different conventions). Checked internally: the estimate is
 insensitive to the perturbation-norm scale (three widely different values, $10^{-4}, 10^{-6}, 10^{-8}$,
 agree to 4 significant figures, confirming the algorithm operates in the correct locally-linear
 regime) and stabilises rather than drifting over the second half of a long integration window
@@ -135,13 +135,11 @@ $$Y_f' = HX_f', \qquad P_fH^T \approx \tfrac{1}{N_e-1}X_f'Y_f'^T, \qquad HP_fH^T
 
 $$K = (P_fH^T)\big[(HP_fH^T)+R\big]^{-1}, \qquad x_a^i = x_f^i + K\big(y^i - Hx_f^i\big),\quad y^i = y+\varepsilon^i,\ \varepsilon^i\sim N(0,R)\ \text{i.i.d. per member}.$$
 
-## Independent linear-Gaussian validation
+## Linear-Gaussian verification
 
-Before being trusted on the nonlinear L96 system, the EnKF was validated against the EXACT Kalman
-filter on a small ($n=4$) linear-Gaussian system with a known analytical posterior
-(`src/kalman_reference.py`, `tests/test_kalman_validation.py`) -- the data-assimilation analogue of
-the analytical-posterior sampler check used for the pCN sampler in the companion
-`darcy-inverse-problem` project. Both ensemble mean and covariance converge cleanly toward the exact
+Before use on the nonlinear L96 system, the EnKF is verified against the exact Kalman filter on a
+small ($n=4$) linear-Gaussian system with a known analytical posterior (`src/kalman_reference.py`,
+`tests/test_kalman_validation.py`). Both ensemble mean and covariance converge cleanly toward the exact
 values as $N_e$ grows:
 
 | $N_e$ | mean error (post-transient avg.) | covariance error (post-transient avg.) |
@@ -172,7 +170,7 @@ std $=1$, observation interval $0.1$ time units, 400 cycles (`scripts/run_baseli
 - Time-averaged analysis spread: $0.19$. **Analysis RMSE / spread ratio $\approx24$** -- severe
   under-dispersion: the ensemble is confidently, persistently wrong.
 
-**This is the central, honestly-reported finding motivating the rest of the project**: a plausible,
+**This finding motivates the rest of the project**: a plausible,
 "reasonable-looking" ensemble size for a 40-dimensional system, without localization or inflation,
 suffers textbook EnKF filter divergence (ensemble spread collapses while RMSE grows), demonstrating
 directly the finite-ensemble sampling problem that localization and inflation exist to address --
@@ -204,7 +202,7 @@ Same configuration, $N_e\in\{10,20,40,80\}$, no localization/inflation, 10 seeds
 
 A clear improving trend, but even $N_e=80$ (double the state dimension) does not fully resolve the
 problem without localization -- and its large standard deviation ($\pm1.35$) shows some seeds still
-struggle. Larger ensembles alone are not assumed to fix every issue (confirmed, not assumed): see
+struggle. Larger ensembles alone do not fix the problem at these sizes: see
 "Localization" for the much larger improvement a modest ensemble gets from covariance localization
 instead (`figures/ensemble_size_study_full.png`).
 
@@ -285,7 +283,7 @@ improved (though not perfectly flattened) with it.
 
 ## Localization
 
-Applied BECAUSE the baseline demonstrated the need (severe under-dispersion at $N_e=20$ for $K=40$),
+Applied because the baseline demonstrated the need (severe under-dispersion at $N_e=20$ for $K=40$),
 not by default. Gaspari-Cohn (1999) compactly-supported correlation function on the cyclic L96 ring
 (`src/localization.py`), radius $\in\{2,4,6,10\}$ compared against no localization, $N_e=20$, 10 seeds
 (`scripts/localization_study.py`, `full` config):
@@ -298,13 +296,16 @@ not by default. Gaspari-Cohn (1999) compactly-supported correlation function on 
 | 6.0 | $1.08\pm0.62$ | $0.260\pm0.003$ |
 | 10.0 | $3.40\pm0.72$ | $0.227\pm0.003$ |
 
-**Dramatic improvement**: radius 2 cuts RMSE by over $11\times$ relative to the unlocalized baseline.
+Radius 2 reduces the time-averaged RMSE from $4.63$ to $0.41$, below the observation-noise standard
+deviation of $1.0$. The unlocalized baseline it is compared with has effectively diverged (its RMSE is
+barely below the free-forecast value of $4.93$), so the ratio of over $11\times$ measures recovery from
+filter divergence rather than a refinement of a working filter. The radius was chosen from the same 10
+seeds that are reported; the next radius (4) still gives a $9.5\times$ reduction.
 Performance degrades smoothly as the radius grows toward the unlocalized limit (radius 10 is already
 much worse), and the STANDARD DEVIATION across seeds also grows with radius -- weaker localization
 means occasional bad seeds re-emerge, not just a worse mean. The best radius differs slightly between
 configurations (radius 4 best at `local` scale, radius 2 best at `full` scale) -- a modest,
-seed-count-dependent effect reported honestly rather than papered over with a single "the" optimal
-value (`figures/localization_study_full.png`).
+seed-count-dependent effect, so no single optimal value is claimed (`figures/localization_study_full.png`).
 
 <p align="center">
   <img src="figures/localization_study_full.png" width="480"
@@ -343,10 +344,7 @@ not simply an underestimated variance SCALE (which is what inflation corrects). 
 already applied, additional inflation gives at most a marginal further improvement and then makes
 things WORSE** (best at $\lambda\approx1.05$, degrading monotonically beyond that) -- over-inflating an
 already-well-calibrated filter just adds unnecessary spread. The best-radius selection for the combined
-study is computed empirically from this study's own small radius grid (not copied from a different
-study or picked by an untested heuristic -- an earlier draft of this script picked the middle INDEX of
-the radius list rather than the empirically best radius, silently conflating "radius 6" with "the best
-radius"; caught and fixed before these results were produced)
+study is the radius with the lowest RMSE on this study's own small radius grid
 (`figures/inflation_study_full.png`).
 
 ## Failure regimes
@@ -423,8 +421,8 @@ above affordable, which was prioritised over micro-optimising this already-fast 
 - **Localization/inflation are manually swept over small a priori grids, not adaptively tuned** (e.g.
   no adaptive inflation schemes such as RTPS/RTPP, no covariance-localization-radius optimisation
   beyond the small fixed grids tested).
-- **Observation-density study's stride-8 non-monotonicity is unexplained.** Reported honestly (see
-  "Observation-density study") rather than hidden; a full diagnosis (e.g. checking whether specific
+- **Observation-density study's stride-8 non-monotonicity is unexplained** (see
+  "Observation-density study"); a full diagnosis (e.g. checking whether specific
   observed-node placement relative to the localization radius matters) was not pursued.
 - **No parameter estimation.** $F$ and $K$ are fixed and known; the EnKF here estimates only the
   state, not any model parameters jointly.
@@ -481,7 +479,7 @@ lorenz96-data-assimilation/
 │   ├── observations.py      observation operator H, noise covariance R
 │   ├── enkf.py               stochastic EnKF analysis update
 │   ├── localization.py      Gaspari-Cohn localization
-│   ├── kalman_reference.py  exact Kalman filter (linear-Gaussian validation reference)
+│   ├── kalman_reference.py  exact Kalman filter (linear-Gaussian verification reference)
 │   └── experiment.py         shared forecast-analysis cycling runner, used by every study script
 ├── scripts/                 13 scripts: one per README section, plus one figure script (see "Reproducibility")
 ├── tests/                    40 pytest tests
