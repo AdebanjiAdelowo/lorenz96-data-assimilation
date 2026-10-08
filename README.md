@@ -6,6 +6,18 @@ exact Kalman filter on a linear-Gaussian reference problem, then applied to a 40
 system under partial, noisy, intermittent observations. No machine learning is used anywhere in this
 repository.
 
+## Scientific status at a glance
+
+| | |
+|---|---|
+| **Problem** | Sequential state estimation for chaotic Lorenz-96 with partial noisy observations |
+| **Method** | Stochastic Ensemble Kalman Filter with localization and covariance inflation |
+| **Verification** | RK4 convergence, chaos diagnostics, exact linear-Gaussian Kalman reference and repeated-seed experiments |
+| **Headline result** | Localization substantially improves finite-ensemble assimilation, while very small ensembles still exhibit genuine filter failure |
+| **Main qualification** | Perfect-model Lorenz-96 testbed; this is not an operational weather model and no structural model error is studied |
+
+**Read first:** Linear-Gaussian verification, the assimilation experiments and Limitations.
+
 ## Overview
 
 The methodological arc is **chaotic dynamical system -> partial/noisy observations -> sequential
