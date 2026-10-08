@@ -6,6 +6,15 @@ exact Kalman filter on a linear-Gaussian reference problem, then applied to a 40
 system under partial, noisy, intermittent observations. No machine learning is used anywhere in this
 repository.
 
+
+## Project overview
+
+Chaotic systems quickly become difficult to predict because small errors in the initial state grow with time. Data assimilation addresses this by repeatedly combining a model forecast with new observations. This project studies that idea in the Lorenz-96 system, a standard simplified testbed for weather-like chaotic dynamics.
+
+The main method is the Ensemble Kalman Filter (EnKF). Instead of tracking one predicted state, it evolves an ensemble of possible states and uses their spread to estimate uncertainty and update the forecast when observations arrive. The project studies practical issues such as ensemble size, covariance localization and inflation.
+
+The implementation is checked first on problems with known references before being used on the nonlinear chaotic system. The conclusions apply to this idealised perfect-model experiment; the repository does not claim to reproduce the complexity of operational weather prediction.
+
 ## Scientific status at a glance
 
 | | |
