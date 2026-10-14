@@ -1,5 +1,7 @@
 # Lorenz-96 Data Assimilation with an Ensemble Kalman Filter
 
+[![Scientific CI](https://github.com/AdebanjiAdelowo/lorenz96-data-assimilation/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/AdebanjiAdelowo/lorenz96-data-assimilation/actions/workflows/ci.yml)
+
 A classical sequential-Bayesian-state-estimation study on the chaotic Lorenz-96 system: a stochastic
 Ensemble Kalman Filter (EnKF) is derived from the mathematics, verified against the
 exact Kalman filter on a linear-Gaussian reference problem, then applied to a 40-dimensional chaotic
